@@ -12,12 +12,14 @@ and open the template in the editor.
     </head>
     <?php
     session_start();
+    $valid = false;
+    $errMessage = "";
 
     function ValidateLogin($SID, $pass, $myPDO) {
-        $hash_pass = hash("sha256",$pass);
+        $hash_pass = hash("sha256", $pass);
         $sql = 'SELECT StudentID FROM Student WHERE Password = :hash_pass AND StudentID = :SID';
         $pSql = $myPDO->prepare($sql);
-        $pSql->execute(['hash_pass' =>$hash_pass , 'SID' => $SID]);
+        $pSql->execute(['hash_pass' => $hash_pass, 'SID' => $SID]);
 
         if ($pSql->rowCount() == 0) {
             return "incorrect student id or password";
@@ -25,15 +27,15 @@ and open the template in the editor.
             return "";
         }
     }
-    
+
     if (isset($_POST["Clear"])) {
-        
+
         $SID = "";
         $pass = "";
     }
 
-    $valid = false;
-    
+
+
     if (isset($_POST["Submit"])) {
 
         $myPDO;
