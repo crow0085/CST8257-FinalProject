@@ -62,6 +62,12 @@ and open the template in the editor.
     $fname_error_message = "";
     $phone_error_message = "";
     $password_error_message = "";
+    $SID = "";
+    $fname = "";
+    $phone = "";
+    $pass = "";
+    $password_confirm = "";
+
 
     if (isset($_POST["Clear"])) {
         

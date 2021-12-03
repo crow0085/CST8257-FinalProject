@@ -14,6 +14,8 @@ and open the template in the editor.
     session_start();
     $valid = false;
     $errMessage = "";
+    $SID = "";
+    $pass = "";
 
     function ValidateLogin($SID, $pass, $myPDO) {
         $hash_pass = hash("sha256", $pass);
