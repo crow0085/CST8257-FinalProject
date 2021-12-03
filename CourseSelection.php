@@ -58,10 +58,10 @@ and open the template in the editor.
         return $myPDO;
     }
 
-    function getCourseBySemeter($semester, $myPDO) {
-        $sql = "SELECT c.CourseCode as Code, Title, WeeklyHours FROM Course as c INNER JOIN CourseOffer as co ON c.CourseCode = co.CourseCode WHERE co.SemesterCode = :semesterCode AND NOT EXISTS (SELECT * FROM registration WHERE co.CourseCode = registration.CourseCode)";
+    function getCourseBySemeter($semester, $SID, $myPDO) {
+        $sql = "SELECT c.CourseCode as Code, Title, WeeklyHours FROM Course as c INNER JOIN CourseOffer as co ON c.CourseCode = co.CourseCode WHERE co.SemesterCode = :semesterCode AND NOT EXISTS (SELECT * FROM registration WHERE co.CourseCode = registration.CourseCode and registration.StudentId = :SID)";
         $pStmt = $myPDO->prepare($sql);
-        $pStmt->execute(['semesterCode' => $semester]);
+        $pStmt->execute(['semesterCode' => $semester, 'SID'=>$SID]);
 
         $courses = array();
 
@@ -202,7 +202,7 @@ and open the template in the editor.
                     </thead>
                     <tbody>
                         <?php
-                        $Courses = getCourseBySemeter($semesterCode, GetPdo());
+                        $Courses = getCourseBySemeter($semesterCode, $SID, GetPdo());
                         foreach ($Courses as $course) {
 
                             echo "<tr>";
