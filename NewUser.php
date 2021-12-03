@@ -107,6 +107,7 @@ and open the template in the editor.
                 $pSql = $myPDO->prepare($sql);
                 $pSql->execute(['SID'=>$SID, 'fname'=>$fname, 'phone'=>$phone, 'hash_pass'=>$hash_pass]);
                 $_SESSION["logged_in"] = true;
+                $_SESSION["StudentID"] = $SID;
                 header("Location: CourseSelection.php");
             }
         } catch (Exception $ex) {

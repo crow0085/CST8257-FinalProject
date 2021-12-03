@@ -13,8 +13,12 @@ and open the template in the editor.
     </head>
     <?php
     session_start();
+    if (!isset($_SESSION["logged_in"]) && $_SESSION["logged in"] == false) {
+        header("Location: Login.php");
+    }
     $SID = $_SESSION["StudentID"];
     $check_list = array();
+    $name = GetStudentName($SID, GetPdo());
 
     function GetPdo() {
         $dbConnection = parse_ini_file("Lab5.ini");
@@ -76,8 +80,6 @@ and open the template in the editor.
         return $courseHoursBySemester;
     }
 
-    
-
     function RemoveRegistrations($SID, $check_list, $myPDO) {
         foreach ($check_list as $item) {
             $code = explode(" ", $item)[0];
@@ -93,10 +95,10 @@ and open the template in the editor.
         foreach ($_POST['check_list'] as $item) {
             $check_list[] = $item;
         }
-        
+
         RemoveRegistrations($SID, $check_list, GetPdo());
     }
-    
+
     $registrations = GetRegistrations($SID, GetPdo());
     $courseHoursBySemester = GetCourseHoursBySemester($registrations);
 
@@ -104,6 +106,8 @@ and open the template in the editor.
     ?>
     <body>
         <div class="container">
+            <h3>Current registrations</h3>
+            <p>Welcome <?php echo $name ?>! not you? Logout<a href="Logout.php"> here</a> and change user</p>
             <form action="CurrentRegistrations.php" method="POST">
                 <table class="table">
                     <thead>
