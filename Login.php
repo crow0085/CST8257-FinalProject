@@ -32,6 +32,8 @@ and open the template in the editor.
         $pass = "";
     }
 
+    $valid = false;
+    
     if (isset($_POST["Submit"])) {
 
         $myPDO;

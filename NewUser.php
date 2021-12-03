@@ -58,10 +58,10 @@ and open the template in the editor.
         }
     }
 
-    $SID_error_message;
-    $fname_error_message;
-    $phone_error_message;
-    $password_error_message;
+    $SID_error_message = "";
+    $fname_error_message = "";
+    $phone_error_message = "";
+    $password_error_message = "";
 
     if (isset($_POST["Clear"])) {
         
