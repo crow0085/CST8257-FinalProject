@@ -31,14 +31,14 @@ and open the template in the editor.
 
     function ValidateStudentID($SID, $myPDO) {
 
-        $sql = "SELECT StudentID FROM Student WHERE StudentID = '$SID'";
+        $sql = "SELECT UserId FROM User WHERE UserId = '$SID'";
         $resultSet = $myPDO->query($sql);
         $row = $resultSet->fetch(PDO::FETCH_ASSOC);
 
         if ($SID == "") {
-            return "student id cannot be blank";
+            return "User id cannot be blank";
         } else if ($row) {
-            return "student id already exists";
+            return "User id already exists";
         } else {
             return "";
         }
@@ -63,8 +63,14 @@ and open the template in the editor.
     $phone_error_message = "";
     $password_error_message = "";
 
+    $SID = "";
+    $fname = "";
+    $phone = "";
+    $pass = "";
+    $password_confirm = "";
+
     if (isset($_POST["Clear"])) {
-        
+
         $SID = "";
         $fname = "";
         $phone = "";
@@ -83,7 +89,7 @@ and open the template in the editor.
         $valid = false;
 
         try {
-            $dbConnection = parse_ini_file("Lab5.ini");
+            $dbConnection = parse_ini_file("Assignment.ini");
 
             extract($dbConnection);
 
@@ -102,13 +108,13 @@ and open the template in the editor.
             }
 
             if ($valid) {
-                $hash_pass = hash("sha256",$pass);
-                $sql = 'INSERT INTO Student VALUES (:SID, :fname, :phone,:hash_pass);';
+                $hash_pass = hash("sha256", $pass);
+                $sql = 'INSERT INTO User VALUES (:SID, :fname, :phone,:hash_pass);';
                 $pSql = $myPDO->prepare($sql);
-                $pSql->execute(['SID'=>$SID, 'fname'=>$fname, 'phone'=>$phone, 'hash_pass'=>$hash_pass]);
+                $pSql->execute(['SID' => $SID, 'fname' => $fname, 'phone' => $phone, 'hash_pass' => $hash_pass]);
                 $_SESSION["logged_in"] = true;
-                $_SESSION["StudentID"] = $SID;
-                header("Location: CourseSelection.php");
+                $_SESSION["UserID"] = $SID;
+                header("Location: Index.php");
             }
         } catch (Exception $ex) {
             echo $ex->getMessage();
@@ -127,7 +133,7 @@ and open the template in the editor.
             <form action="NewUser.php" method="POST">
                 <div class="row form-group">
                     <div class="col-md-2">
-                        <label class="font-weight-bold">Student ID:</label>
+                        <label class="font-weight-bold">User ID:</label>
                     </div>
                     <div class="col-md-2">
                         <input class="form-control" name="SID" type="text" value="<?php echo "$SID"; ?>" />
