@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.6/dist/css/bootstrap.min.css">
 </head>
 <body style="padding-top: 50px; margin-bottom: 60px;">
+    <?php include("./common/functions.php"); ?>
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->

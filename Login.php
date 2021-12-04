@@ -12,23 +12,14 @@ and open the template in the editor.
     </head>
     <?php
     session_start();
+    include("./common/header.php");
+
+
     $valid = false;
     $errMessage = "";
     $SID = "";
     $pass = "";
 
-    function ValidateLogin($SID, $pass, $myPDO) {
-        $hash_pass = hash("sha256", $pass);
-        $sql = 'SELECT UserId FROM User WHERE Password = :hash_pass AND UserId = :SID';
-        $pSql = $myPDO->prepare($sql);
-        $pSql->execute(['hash_pass' => $hash_pass, 'SID' => $SID]);
-
-        if ($pSql->rowCount() == 0) {
-            return "incorrect user id or password";
-        } else {
-            return "";
-        }
-    }
 
     if (isset($_POST["Clear"])) {
 
@@ -73,8 +64,6 @@ and open the template in the editor.
 
         $myPdo = null;
     }
-
-    include("./common/header.php");
     ?>
     <body>
         <div class="container">
