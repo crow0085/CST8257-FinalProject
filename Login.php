@@ -30,22 +30,11 @@ and open the template in the editor.
 
 
     if (isset($_POST["Submit"])) {
-
-        $myPDO;
-
         $SID = $_POST["SID"];
         $pass = $_POST["password"];
-
         $valid = false;
-
         try {
-            $dbConnection = parse_ini_file("Assignment.ini");
-
-            extract($dbConnection);
-
-            $myPDO = new PDO($dsn, $user, $password);
-
-            $errMessage = ValidateLogin($SID, $pass, $myPDO);
+            $errMessage = ValidateLogin($SID, $pass, GetPdo());
 
             $valid = true;
 
@@ -61,8 +50,6 @@ and open the template in the editor.
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
-
-        $myPdo = null;
     }
     ?>
     <body>

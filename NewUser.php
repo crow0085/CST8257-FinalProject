@@ -13,7 +13,7 @@ and open the template in the editor.
     <?php
     session_start();
     include("./common/header.php");
-    
+
     $SID_error_message = "";
     $fname_error_message = "";
     $phone_error_message = "";
@@ -35,7 +35,6 @@ and open the template in the editor.
     }
 
     if (isset($_POST["Submit"])) {
-        $myPDO;
 
         $SID = $_POST["SID"];
         $fname = $_POST["fname"];
@@ -45,13 +44,7 @@ and open the template in the editor.
         $valid = false;
 
         try {
-            $dbConnection = parse_ini_file("Assignment.ini");
-
-            extract($dbConnection);
-
-            $myPDO = new PDO($dsn, $user, $password);
-
-            $SID_error_message = ValidateStudentID($SID, $myPDO);
+            $SID_error_message = ValidateStudentID($SID, GetPdo());
             $fname_error_message = ValidateName($fname);
             $phone_error_message = ValidatePhone($phone);
             $password_error_message = ValidatePassword($pass, $password_confirm);
@@ -75,11 +68,7 @@ and open the template in the editor.
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
-
-        $myPdo = null;
     }
-
-    
     ?>
     <body>
         <div class="container">

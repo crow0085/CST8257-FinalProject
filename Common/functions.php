@@ -59,7 +59,7 @@ function ValidateLogin($SID, $pass, $myPDO) {
 }
 
 function GetPdo() {
-    $dbConnection = parse_ini_file("Lab5.ini");
+    $dbConnection = parse_ini_file("Assignment.ini");
     extract($dbConnection);
     $myPDO = new PDO($dsn, $user, $password);
     return $myPDO;
