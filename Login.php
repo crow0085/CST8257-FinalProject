@@ -64,7 +64,7 @@ and open the template in the editor.
 
             if ($valid) {
                 $_SESSION["logged_in"] = true;
-                $_SESSION["StudentID"] = $SID;
+                $_SESSION["UserID"] = $SID;
                 header("Location: Index.php");
             }
         } catch (Exception $ex) {
