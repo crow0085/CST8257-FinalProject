@@ -59,7 +59,7 @@ and open the template in the editor.
             if ($valid) {
                 $hash_pass = hash("sha256", $pass);
                 $sql = 'INSERT INTO User VALUES (:SID, :fname, :phone,:hash_pass);';
-                $pSql = $myPDO->prepare($sql);
+                $pSql = GetPdo()->prepare($sql);
                 $pSql->execute(['SID' => $SID, 'fname' => $fname, 'phone' => $phone, 'hash_pass' => $hash_pass]);
                 $_SESSION["logged_in"] = true;
                 $_SESSION["UserID"] = $SID;
