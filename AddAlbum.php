@@ -30,6 +30,7 @@ and open the template in the editor.
         $title_err_message = ValidateAlbumTitle($title);
         if ($title_err_message == "") {
             AddAlbum($title, $accessibilityCode, $description, $SID, GetPdo());
+            header("Location: MyAlbums.php");
         }
     }
     ?>

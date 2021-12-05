@@ -58,7 +58,7 @@ and open the template in the editor.
                         <?php
                         foreach ($albums as $album) {
                             echo "<tr>";
-                            echo "<td>$album->title $album->albumID</td>";
+                            echo "<td>$album->title</td>";
                             echo "<td>$album->dateUpdated</td>";
                             echo "<td>$album->pictureCount</td>";
                             echo "<td>";
