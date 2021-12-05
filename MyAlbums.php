@@ -34,7 +34,7 @@ and open the template in the editor.
             <h3>My Albums</h3>
             <p>Welcome <?php echo $name; ?> (not you? change user <a href="Login.php">here</a>)</p>
             <div class="row">
-                <a class="col-md-2 col-md-offset-10">Create New Album</a>
+                <a class="col-md-2 col-md-offset-10" href="AddAlbum.php">Create New Album</a>
             </div>
 
             <form action="MyAlbums.php" method="POST">
