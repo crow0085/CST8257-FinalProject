@@ -8,6 +8,7 @@
 </head>
 <body style="padding-top: 50px; margin-bottom: 60px;">
     <?php include("./common/functions.php"); ?>
+    <?php include("./common/classes.php"); ?>
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -27,7 +28,7 @@
           <ul class="nav navbar-nav">
             <li class="active"> <a href="Index.php">Home</a></li>
             <li><a href="Index.php">My Friends</a></li>
-            <li><a href="Index.php">My Albums</a></li>
+            <li><a href="MyAlbums.php">My Albums</a></li>
             <li><a href="Index.php">My Pictures</a></li>
             <li><a href="Index.php">Upload Pictures</a></li>
             <?php if (!isset($_SESSION["logged_in"])){

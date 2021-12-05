@@ -65,4 +65,51 @@ function GetPdo() {
     return $myPDO;
 }
 
+function GetUserName($SID, $myPDO) {
+
+    $sql = "select UserId, Name from User where UserId = :user_id";
+    $pStmt = $myPDO->prepare($sql);
+    $pStmt->execute(['user_id' => $SID]);
+    $row = $pStmt->fetch(PDO::FETCH_ASSOC);
+    return $row['Name'];
+}
+
+function GetAlbums($SID, $myPDO) {
+    $sql = "select * from Album where Owner_Id = :user_id";
+    $pStmt = $myPDO->prepare($sql);
+    $pStmt->execute(['user_id' => $SID]);
+
+    $albums = array();
+
+    foreach ($pStmt as $row) {
+        $album = new Album($row['Album_Id'], $row['Title'], $row['Description'], $row['Date_Updated'], $row['Owner_Id'], $row['Accessibility_Code']);
+        $albums[] = $album;
+    }
+
+    foreach ($albums as $album) {
+        $sql = "select count(*) as total from Picture where Album_Id = :album_id";
+        $pStmt = $myPDO->prepare($sql);
+        $pStmt->execute(['album_id' => $album->albumID]);
+        $row = $pStmt->fetch(PDO::FETCH_ASSOC);
+        $album->pictureCount = $row['total'];
+    }
+
+    return $albums;
+}
+
+function GetAccessibility($myPDO) {
+    $sql = "select * from Accessibility";
+    $pStmt = $myPDO->prepare($sql);
+    $pStmt->execute();
+    
+    $accessibilities = array();
+    
+    foreach ($pStmt as $row){
+        $accessibility = new Accessibility($row['Accessibility_Code'], $row['Description']);
+        $accessibilities[] = $accessibility;
+    }
+    
+    return $accessibilities;
+}
+
 ?>
