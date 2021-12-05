@@ -18,12 +18,20 @@ and open the template in the editor.
     }
 
     $SID = $_SESSION["UserID"];
-    
-    
-    if (isset($_POST["delete"])){
+
+
+    if (isset($_POST["delete"])) {
         DeleteAlbum($_POST["albumToDelete"][0], GetPdo());
     }
-    
+
+    if (isset($_POST["Submit"])) {
+        $accessibilityChangeList = array();
+        foreach ($_POST["accessibility"] as $item) {
+            $accessibilityChangeList[] = $item;
+        }
+        ChangeAccessibility($accessibilityChangeList, GetPdo());
+    }
+
     $albums = GetAlbums($SID, GetPdo());
     $name = GetUserName($SID, GetPdo());
     $accessibilities = GetAccessibility(GetPdo());
@@ -54,12 +62,12 @@ and open the template in the editor.
                             echo "<td>$album->dateUpdated</td>";
                             echo "<td>$album->pictureCount</td>";
                             echo "<td>";
-                            echo "<select name='accessibility'>";
+                            echo "<select name='accessibility[]'>";
                             foreach ($accessibilities as $accessibility) {
                                 if ($accessibility->accessibilityCode == $album->accessibilityCode) {
-                                    echo "<option value='$album->accessibilityCode $album->albumID' selected> $accessibility->description </option>";
+                                    echo "<option value='$accessibility->accessibilityCode $album->albumID' selected> $accessibility->description </option>";
                                 } else {
-                                    echo "<option value='$album->accessibilityCode $album->albumID'> $accessibility->description </option>";
+                                    echo "<option value='$accessibility->accessibilityCode $album->albumID'> $accessibility->description </option>";
                                 }
                             }
                             echo "</select>";
@@ -71,6 +79,12 @@ and open the template in the editor.
                         ?>
                     </tbody>
                 </table>
+                <div class="row form-group">
+                    <div class="col-md-2">
+                        <input class="btn btn-primary" type="submit" name="Submit" value="Submit" />
+                        <input class="btn btn-primary" type="submit" name="Clear" value="Clear" />
+                    </div>
+                </div>
             </form>
 
         </div>

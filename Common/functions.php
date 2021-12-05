@@ -112,9 +112,15 @@ function GetAccessibility($myPDO) {
     return $accessibilities;
 }
 
-function ChangeAccessibility($album, $myPDO) {
-    $accessibilityCode = explode(" ", $album)[0];
-    $albumID = explode(" ", $album)[1];
+function ChangeAccessibility($accessibilityChangeList, $myPDO) {
+    foreach ($accessibilityChangeList as $album) {
+        $accessibilityCode = explode(" ", $album)[0];
+        $albumID = explode(" ", $album)[1];
+
+        $sql = "update Album set Accessibility_Code = :accessibility_code where Album_Id = :album_id";
+        $pStmt = $myPDO->prepare($sql);
+        $pStmt->execute(['album_id' => $albumID, 'accessibility_code'=>$accessibilityCode]);
+    }
 }
 
 function DeleteAlbum($album, $myPDO) {
@@ -140,7 +146,7 @@ function ValidateAlbumTitle($title) {
 function AddAlbum($title, $accessibility, $description, $SID, $myPDO) {
     $sql = "INSERT INTO `album` (`Album_Id`, `Title`, `Description`, `Date_Updated`, `Owner_Id`, `Accessibility_Code`) VALUES (NULL, :title, :description, :date, :owner_id, :accessibility_Code)";
     $pStmt = $myPDO->prepare($sql);
-    $pStmt->execute(['title'=>$title, 'description'=>$description, 'date'=>date('Y-m-d'), 'owner_id'=>$SID, 'accessibility_Code'=>$accessibility]);
+    $pStmt->execute(['title' => $title, 'description' => $description, 'date' => date('Y-m-d'), 'owner_id' => $SID, 'accessibility_Code' => $accessibility]);
 }
 
 ?>
