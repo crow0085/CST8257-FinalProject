@@ -11,7 +11,7 @@ Class Album{
     public $pictureCount;
     
     public function __construct(string $albumID, string $title, string $description, string $dateUpdated, string $ownerID, string $accessibilityCode) {
-        $this-$this->albumID = $albumID;
+        $this->albumID = $albumID;
         $this->title = $title;
         $this->description = $description;
         $this->dateUpdated = $dateUpdated;

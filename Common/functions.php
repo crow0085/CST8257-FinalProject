@@ -101,15 +101,32 @@ function GetAccessibility($myPDO) {
     $sql = "select * from Accessibility";
     $pStmt = $myPDO->prepare($sql);
     $pStmt->execute();
-    
+
     $accessibilities = array();
-    
-    foreach ($pStmt as $row){
+
+    foreach ($pStmt as $row) {
         $accessibility = new Accessibility($row['Accessibility_Code'], $row['Description']);
         $accessibilities[] = $accessibility;
     }
-    
+
     return $accessibilities;
+}
+
+function ChangeAccessibility($album, $myPDO) {
+    $accessibilityCode = explode(" ", $album)[0];
+    $albumID = explode(" ", $album)[1];
+}
+
+function DeleteAlbum($album, $myPDO) {
+    //delete the pictures from the album
+    $sql = "delete from Picture where Album_Id = :album_id";
+    $pStmt = $myPDO->prepare($sql);
+    $pStmt->execute(['album_id' => $album]);
+    
+    // delete the album
+    $sql = "delete from Album where Album_Id = :album_id";
+    $pStmt = $myPDO->prepare($sql);
+    $pStmt->execute(['album_id' => $album]);
 }
 
 ?>

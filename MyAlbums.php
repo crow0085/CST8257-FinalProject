@@ -18,6 +18,12 @@ and open the template in the editor.
     }
 
     $SID = $_SESSION["UserID"];
+    
+    
+    if (isset($_POST["delete"])){
+        DeleteAlbum($_POST["albumToDelete"][0], GetPdo());
+    }
+    
     $albums = GetAlbums($SID, GetPdo());
     $name = GetUserName($SID, GetPdo());
     $accessibilities = GetAccessibility(GetPdo());
@@ -31,36 +37,42 @@ and open the template in the editor.
                 <a class="col-md-2 col-md-offset-10">Create New Album</a>
             </div>
 
-            <table class="table">
-                <thead>
-                <th>Title</th>
-                <th>Date Updated</th>
-                <th>Number of Pictures</th>
-                <th>Accessibility</th>
-                </thead>
-                <tbody>
-                    <?php
-                    foreach ($albums as $album) {
-                        echo "<tr>";
-                        echo "<td>$album->title</td>";
-                        echo "<td>$album->dateUpdated</td>";
-                        echo "<td>$album->pictureCount</td>";
-                        echo "<td>";
-                        echo "<select name='accessibility'>";
-                        foreach($accessibilities as $accessibility){
-                           if ($accessibility->accessibilityCode == $album->accessibilityCode) {
-                               echo "<option value='$album->accessibilityCode' selected> $accessibility->description </option>";
-                           }else{
-                               echo "<option value='$album->accessibilityCode'> $accessibility->description </option>";
-                           }
+            <form action="MyAlbums.php" method="POST">
+                <table class="table">
+                    <thead>
+                    <th>Title</th>
+                    <th>Date Updated</th>
+                    <th>Number of Pictures</th>
+                    <th>Accessibility</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($albums as $album) {
+                            echo "<tr>";
+                            echo "<td>$album->title $album->albumID</td>";
+                            echo "<td>$album->dateUpdated</td>";
+                            echo "<td>$album->pictureCount</td>";
+                            echo "<td>";
+                            echo "<select name='accessibility'>";
+                            foreach ($accessibilities as $accessibility) {
+                                if ($accessibility->accessibilityCode == $album->accessibilityCode) {
+                                    echo "<option value='$album->accessibilityCode $album->albumID' selected> $accessibility->description </option>";
+                                } else {
+                                    echo "<option value='$album->accessibilityCode $album->albumID'> $accessibility->description </option>";
+                                }
+                            }
+                            echo "</select>";
+                            echo"</td>";
+                            echo " <input type='hidden' name='albumToDelete[]' value='$album->albumID'> ";
+                            echo "<td> <input class='btn btn-link' type='submit' name='delete' value='delete' /> </td>";
+                            echo "</tr>";
                         }
-                        echo "</select>";
-                        echo"</td>";
-                        echo "</tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        ?>
+                    </tbody>
+                </table>
+            </form>
+
         </div>
     </body>
 </html>
