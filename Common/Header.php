@@ -30,7 +30,7 @@
             <li><a href="Index.php">My Friends</a></li>
             <li><a href="MyAlbums.php">My Albums</a></li>
             <li><a href="Index.php">My Pictures</a></li>
-            <li><a href="Index.php">Upload Pictures</a></li>
+            <li><a href="UploadPictures.php">Upload Pictures</a></li>
             <?php if (!isset($_SESSION["logged_in"])){
                 echo"<li><a href='Login.php'>Login</a></li> </ul>";
             }else{
