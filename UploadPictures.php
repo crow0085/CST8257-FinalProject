@@ -27,7 +27,7 @@ if (isset($_POST['btnUpload']))
 			$dir = $pathInfo['dirname'];
 			$fileName = $pathInfo['filename'];
 			$ext = $pathInfo['extension'];
-			
+			$dbfileName = $fileName .".".$ext;
 			$i="";
 			while (file_exists($filePath))
 			{	
@@ -35,10 +35,9 @@ if (isset($_POST['btnUpload']))
 				$filePath = $dir."/".$fileName."_".$i.".".$ext;
 			}
 			move_uploaded_file($fileTempPath, $filePath);
-                        $sql = "INSERT INTO 'Picture' ('Picture_Id',Album_Id', 'File_Name', 'Title', 'Description', 'Date_Added') VALUES(NULL :albumId, :fileName, :title, :description, :dateAdded)";
-                        $pSql = $MyPDO->prepare($sql);
-                        $pSql->execute(['albumId' => $dropValue, 'fileName' => $fileName, 'title' => $title , 'description' => $description , 'dateAdded' => date('Y-m-d')]);
-               
+                        $sql = "INSERT INTO `picture` (`Picture_Id`, `Album_Id`, `FileName`, `Title`, `Description`, `Date_Added`) VALUES (NULL, :albumId, :fileName, :title, :description, :dateAdded)";
+                         $pSql = $MyPDO->prepare($sql);
+                        $pSql->execute(['albumId' => $dropValue, 'fileName' => $dbfileName, 'title' => $title, 'description' => $description, 'dateAdded' => date('Y-m-d')]);
                         
                         }
 		elseif ($_FILES['txtUpload']['error'][$j]  == 1)
@@ -64,10 +63,15 @@ if (isset($_POST['btnUpload']))
                  
 }
 ?>
-
+<div class="container">
+    
    <form action="UploadPictures.php" method="post"  enctype="multipart/form-data">
+       <div class="row">
         File to Upload:&nbsp; <input type="file" name="txtUpload[]" multiple size='40'/>
+       </div>
         <br/><br/>
+        
+        <div class="row">
          <select id="dropDown" name="dropValue" class="col-lg-2 text-right">
                 <option value="-1">Select An Album</option>
                 <?php
@@ -79,11 +83,25 @@ if (isset($_POST['btnUpload']))
                 }
                 ?>
             </select>
+        </div>
+        <div class="row">
+            <label>Title</label>
+        </div>
+        <div class="row">
         <textarea  name="title"  rows="4"  cols="50"></textarea>
+        </div>
+        <div class="row">
+            <label>Description</label>
+        </div>
+        <div class="row">
         <textarea name="description"  rows="4"  cols="50" ></textarea>
+        </div>
+        <div class="row">
 		<input type="submit" name="btnUpload" value="Upload" />
 		&nbsp; &nbsp; &nbsp;<input type="reset" name="btnReset" value="Reset" />
+        </div>
    </form> 
+</div>
 
 <?php include("./common/footer.php"); ?>
 
