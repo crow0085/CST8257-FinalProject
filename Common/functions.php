@@ -149,4 +149,67 @@ function AddAlbum($title, $accessibility, $description, $SID, $myPDO) {
     $pStmt->execute(['title' => $title, 'description' => $description, 'date' => date('Y-m-d'), 'owner_id' => $SID, 'accessibility_Code' => $accessibility]);
 }
 
+
+function resamplePicture($filePath, $destinationPath, $maxWidth, $maxHeight)
+{
+  
+    $imageDetails = getimagesize($filePath);
+
+    $originalResource = null;
+    if ($imageDetails[2] == IMAGETYPE_JPEG) 
+    {
+            $originalResource = imagecreatefromjpeg($filePath);
+    } 
+    elseif ($imageDetails[2] == IMAGETYPE_PNG) 
+    {
+            $originalResource = imagecreatefrompng($filePath);
+    } 
+    elseif ($imageDetails[2] == IMAGETYPE_GIF) 
+    {
+            $originalResource = imagecreatefromgif($filePath);
+    }
+    $widthRatio = $imageDetails[0] / $maxWidth;
+    $heightRatio = $imageDetails[1] / $maxHeight;
+    $ratio = max($widthRatio, $heightRatio);
+
+    $newWidth = $imageDetails[0] / $ratio;
+    $newHeight = $imageDetails[1] / $ratio;
+
+    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+    $success = imagecopyresampled($newImage, $originalResource, 0, 0, 0, 0, 
+                                    $newWidth, $newHeight, $imageDetails[0], $imageDetails[1]);
+
+    
+    $pathInfo = pathinfo($filePath);
+    $newFilePath = $destinationPath."/".$pathInfo['filename'];
+    if ($imageDetails[2] == IMAGETYPE_JPEG) 
+    {
+            $newFilePath .= ".jpg";
+            $success = imagejpeg($newImage, $newFilePath, 100);
+    } 
+    elseif ($imageDetails[2] == IMAGETYPE_PNG) 
+    {
+            $newFilePath .= ".png";
+            $success = imagepng($newImage, $newFilePath, 0);
+    } 
+    elseif ($imageDetails[2] == IMAGETYPE_GIF) 
+    {
+            $newFilePath .= ".gif";
+            $success = imagegif($newImage, $newFilePath);
+    }
+
+    imagedestroy($newImage);
+    imagedestroy($originalResource);
+
+    if (!$success)
+    {
+            return "";
+    }
+    else
+    {
+            return $newFilePath;
+    }
+}
+
 ?>

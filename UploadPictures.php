@@ -8,6 +8,14 @@ include("./common/header.php");
 $MyPDO = GetPdo();
 $SID = $_SESSION["UserID"];
 $albums = GetAlbums($SID, $MyPDO);
+
+define("IMAGE_DESTINATION", "./Pictures"); 
+define("IMAGE_MAX_WIDTH", 800);
+define("IMAGE_MAX_HEIGHT", 600);
+
+define("THUMB_DESTINATION", "./thumbnails");  
+define("THUMB_MAX_WIDTH", 100);
+define("THUMB_MAX_HEIGHT", 100);
 if (isset($_POST['btnUpload'])) 
 {
     $destination = './Pictures';       	// define the path to a folder to save the file
@@ -35,6 +43,9 @@ if (isset($_POST['btnUpload']))
 				$filePath = $dir."/".$fileName."_".$i.".".$ext;
 			}
 			move_uploaded_file($fileTempPath, $filePath);
+                        //resamplePicture($filePath, IMAGE_DESTINATION, IMAGE_MAX_WIDTH, IMAGE_MAX_HEIGHT);
+                        resamplePicture($filePath, THUMB_DESTINATION, THUMB_MAX_WIDTH, THUMB_MAX_HEIGHT);
+                        
                         $sql = "INSERT INTO `picture` (`Picture_Id`, `Album_Id`, `FileName`, `Title`, `Description`, `Date_Added`) VALUES (NULL, :albumId, :fileName, :title, :description, :dateAdded)";
                          $pSql = $MyPDO->prepare($sql);
                         $pSql->execute(['albumId' => $dropValue, 'fileName' => $dbfileName, 'title' => $title, 'description' => $description, 'dateAdded' => date('Y-m-d')]);
