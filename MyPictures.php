@@ -38,7 +38,7 @@ if(isset($_POST['Change'])){
     <?php 
     if(isset($_POST["Change"])){
     foreach ($result as $row){
-                    echo"<img src='/Pictures/".$row['FileName']."  width='200' height='200'>";
+                    echo"<img src='./Pictures/".$row['FileName']."'  width='200' height='200'>";
                         
                 }
     
