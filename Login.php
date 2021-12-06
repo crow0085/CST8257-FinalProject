@@ -12,23 +12,14 @@ and open the template in the editor.
     </head>
     <?php
     session_start();
+    include("./common/header.php");
+
+
     $valid = false;
     $errMessage = "";
     $SID = "";
     $pass = "";
 
-    function ValidateLogin($SID, $pass, $myPDO) {
-        $hash_pass = hash("sha256", $pass);
-        $sql = 'SELECT StudentID FROM Student WHERE Password = :hash_pass AND StudentID = :SID';
-        $pSql = $myPDO->prepare($sql);
-        $pSql->execute(['hash_pass' => $hash_pass, 'SID' => $SID]);
-
-        if ($pSql->rowCount() == 0) {
-            return "incorrect student id or password";
-        } else {
-            return "";
-        }
-    }
 
     if (isset($_POST["Clear"])) {
 
@@ -39,22 +30,11 @@ and open the template in the editor.
 
 
     if (isset($_POST["Submit"])) {
-
-        $myPDO;
-
         $SID = $_POST["SID"];
         $pass = $_POST["password"];
-
         $valid = false;
-
         try {
-            $dbConnection = parse_ini_file("Lab5.ini");
-
-            extract($dbConnection);
-
-            $myPDO = new PDO($dsn, $user, $password);
-
-            $errMessage = ValidateLogin($SID, $pass, $myPDO);
+            $errMessage = ValidateLogin($SID, $pass, GetPdo());
 
             $valid = true;
 
@@ -64,17 +44,13 @@ and open the template in the editor.
 
             if ($valid) {
                 $_SESSION["logged_in"] = true;
-                $_SESSION["StudentID"] = $SID;
-                header("Location: CourseSelection.php");
+                $_SESSION["UserID"] = $SID;
+                header("Location: Index.php");
             }
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
-
-        $myPdo = null;
     }
-
-    include("./common/header.php");
     ?>
     <body>
         <div class="container">
@@ -94,7 +70,7 @@ and open the template in the editor.
 
                 <div class="row form-group">
                     <div class="col-md-2">
-                        <label class="font-weight-bold">Student ID:</label>
+                        <label class="font-weight-bold">User ID:</label>
                     </div>
                     <div class="col-md-2">
                         <input class="form-control" name="SID" type="text" value="<?php echo "$SID"; ?>" />
