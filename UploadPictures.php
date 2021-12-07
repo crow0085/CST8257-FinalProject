@@ -1,5 +1,7 @@
 <?php
 session_start();
+unset($_SESSION['picId']);
+unset($_SESSION['dropValue']);
 extract ( $_POST ) ;
 if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true) {
         header("Location: Login.php");
@@ -67,15 +69,12 @@ if (isset($_POST['btnUpload']))
         
 	echo "<h2>All Uploaded Files</h2>";
 	$files = scandir($destination);
-	foreach($files as $file)
-	{   
-		echo $file."<br/>"; 
-	}
+	
                  
 }
 ?>
-<div class="container">
-    
+<div class="container" style="padding-top: 5px">
+    <h3>Upload Files</h3>
    <form action="UploadPictures.php" method="post"  enctype="multipart/form-data">
        <div class="row">
         File to Upload:&nbsp; <input type="file" name="txtUpload[]" multiple size='40'/>
@@ -96,6 +95,8 @@ if (isset($_POST['btnUpload']))
             </select>
         </div>
         <div class="row">
+            </br>
+            </br>
             <label>Title</label>
         </div>
         <div class="row">
