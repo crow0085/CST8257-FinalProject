@@ -11,6 +11,7 @@ and open the template in the editor.
     </head>
     <?php
     session_start();
+    $_GET['picId'];
     include("./common/header.php");
 
     if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true) {
