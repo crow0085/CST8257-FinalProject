@@ -87,17 +87,17 @@ if(isset($_GET['picId']) || isset($_POST['commentSubmit'])){
     </div>
     <div class="container-fluid" style="width:1050px;margin:auto; padding-top: 15px;">
     <div >
-        <div class="" style="min-height:400px;min-width:700px; border: 1px solid darkgreen;background:; display:inline-block; float:left;">
+        <div class="" style="min-height:400px;min-width:700px;  display:inline-block; float:left;">
         <?php 
-        if(isset($_GET['picId']) || isset($_POST['commentSubmit'])){
+        if(isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSubmit'])&& !isset($_POST['Change'])){
             echo"<img src='./Pictures/".$mooshoo['FileName']."'width='700' height='400'>";
         }
         ?>
         </div>
-        <div class="" style=" position:relative;border: 1px solid darkgreen;min-height:400px; min-width:300px; max-width:300px; overflow-y: auto; background:; float:left;display:inline-block;">
-      <div style='position:absolute; height:270px; width:298px; border: 1px solid darkgreen; white-space:nowrap;overflow-y:auto;'> 
+        <div class="" style=" position:relative;min-height:400px; min-width:300px; max-width:300px; overflow-y: auto; background:; float:left;display:inline-block;">
+      <div style='position:absolute; height:270px; width:298px;  white-space:nowrap;overflow-y:auto;'> 
           <?php 
-        if(isset($_GET['picId'])|| isset($_POST['commentSubmit'])){
+        if(isset($_GET['picId'])&& !isset($_POST['Change']) || isset($_POST['commentSubmit'])&& !isset($_POST['Change'])){
             Echo"<b>Description</b></br>".$mooshoo['Description']."</br></br>";
             
             foreach($result3 as $row){
@@ -107,17 +107,21 @@ if(isset($_GET['picId']) || isset($_POST['commentSubmit'])){
         }
         ?>    
         </div>
-            <div style="position:absolute;bottom:0px;">
-                <textarea name="comment" rows="4" cols="39" style="resize:none;"></textarea>
-                <input type='submit' name='commentSubmit'>
-            </div>
+            <?php
+            if(isset($_GET['picId']) && !isset($_POST['Change'])){
+            echo"<div style='position:absolute;bottom:0px;'>"
+                ."<textarea name='comment' rows='4' cols='39' style='resize:none;'></textarea>"
+                ."<input type='submit' name='commentSubmit'>"
+            ."</div>";
+            }
+            ?>
         </div>
     </div>
-    <div style="max-width:1000px; min-width:1000px; max-height:135px; min-height:135px;border: 1px solid darkgreen;  white-space:nowrap;overflow-x:auto;background:;">
+    <div style="max-width:1000px; min-width:1000px; max-height:135px; min-height:135px;  white-space:nowrap;overflow-x:auto;background:;">
      <?php 
     if(isset($_POST["Change"]) || isset($_GET["picId"])|| isset($_POST['commentSubmit'])){
     foreach ($result as $row){
-    echo"<a href='MyPictures.php?picId=".$row['Picture_Id']."'><img src='./thumbnails/".$row['FileName']."' width='150' height='115' style='border:1px solid #969696'></a>";
+    echo"<a href='MyPictures.php?picId=".$row['Picture_Id']."'><img src='./thumbnails/".$row['FileName']."' width='150' height='100' style='border:1px solid #969696'></a>";
                         
                 }
     
