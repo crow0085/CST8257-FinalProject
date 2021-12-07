@@ -9,12 +9,19 @@ include("./common/header.php");
 $MyPDO = GetPdo();
 $SID = $_SESSION["UserID"];
 $albums = GetAlbums($SID, $MyPDO);
-if(isset($_POST['Change']) || isset($_GET['picId'])){
-    if (!isset($dropValue) && isset($_SESSION['dropValue'])){
-       $dropValue=$_SESSION['dropValue']; 
+if (!isset($_GET['picId']) && isset($_SESSION['picId'])){
+       $_GET['picId']=$_SESSION['picId']; 
    }
+   if(isset($_GET['picId'])){
+       $_SESSION['picId']= $_GET['picId'];
+   }
+if(isset($_POST['Change']) || isset($_GET['picId'])|| isset($_POST['commentSubmit'])){
+    if (!isset($dropValue) && isset($_SESSION['dropValue'])){
         
-    
+       $dropValue=$_SESSION['dropValue']; 
+        
+   }
+   
     if($dropValue != -1){
     $sql = "SELECT `Picture_Id`, `Album_Id`, `FileName`, `Title`, `Description`, `Date_Added` FROM `picture` WHERE Album_Id = :albumId;";
     $pSql = $MyPDO->prepare($sql);
@@ -24,13 +31,22 @@ if(isset($_POST['Change']) || isset($_GET['picId'])){
     }                    
     
 }
-if(isset($_GET['picId'])){
+if(isset($_GET['picId']) || isset($_POST['commentSubmit'])){
     $picId = $_GET['picId'];
     $sql = "SELECT `Picture_Id`, `Album_Id`, `FileName`, `Title`, `Description`, `Date_Added` FROM `picture` WHERE Picture_Id = :picId";
     $pSql = $MyPDO->prepare($sql);
     $pSql->execute(['picId' => $picId]);
-    
+    if(isset($_POST['comment'])){
+    $sql3 = "INSERT INTO Comment VALUES(NULL, :authorId, :pictureId, :commentText, :date)";
+    $pSql2 = $MyPDO->prepare($sql3);
+    $pSql2->execute(['authorId' => $SID, 'pictureId'=> $picId, 'commentText'=>$comment, 'date'=> date('Y-m-d')]);
+    }
     $mooshoo = $pSql->fetch(PDO::FETCH_ASSOC);
+    $sql2 = "SELECT * FROM Comment "
+                . "INNER JOIN User ON Comment.Author_Id = User.UserId WHERE Picture_Id = :pictureId";
+    $pSql3 = $MyPDO->prepare($sql2);
+    $pSql3->execute(['pictureId' => $picId]);
+    $result3 = $pSql3->fetchAll();
     
 }else{
     
@@ -38,13 +54,21 @@ if(isset($_GET['picId'])){
 ?>
 
 <form action="MyPictures.php" method="post">
-    <div class="container" style="padding-left: 300px">
+    <div class='row' style='padding-left:100px;'>
+        <div>
+            <h3> My Albums</h3>
+        </div>
+    <div class="" style="padding-left: 300px">
 <select id="dropDown" name="dropValue" class="col-lg-3 text-right" >
                 <option value="-1">Select An Album</option>
                 <?php
                 foreach ($albums as $row) {
                     echo"<option value='" . $row->albumID . "'";
-                    
+                    if(isset($_SESSION['dropValue'])){
+                        if($_SESSION['dropValue'] == $row->albumID){
+                            echo "selected";
+                        }
+                    }
                      
                     echo">" .$row->title. "</option>";
                 }
@@ -55,34 +79,43 @@ if(isset($_GET['picId'])){
     </div>
     <div class="text-center">
       <?php 
-        if(isset($_GET['picId'])){
-            Echo$mooshoo['Title'];
+        if(isset($_GET['picId']) || isset($_POST['commentSubmit'])){
+            Echo"<h3>".$mooshoo['Title']."</h3>";
         }
         ?>
     </div>
-    <div class="container-fluid" style="width:900px;margin:auto; padding-top: 25px;">
+    </div>
+    <div class="container-fluid" style="width:1050px;margin:auto; padding-top: 15px;">
     <div >
-        <div class="" style="min-height:400px;min-width:600px; border: 1px solid #969696;background:; display:inline-block; float:left;">
+        <div class="" style="min-height:400px;min-width:700px; border: 1px solid darkgreen;background:; display:inline-block; float:left;">
         <?php 
-        if(isset($_GET['picId'])){
-            echo"<img src='./Pictures/".$mooshoo['FileName']."'width='600' height='400'>";
+        if(isset($_GET['picId']) || isset($_POST['commentSubmit'])){
+            echo"<img src='./Pictures/".$mooshoo['FileName']."'width='700' height='400'>";
         }
         ?>
         </div>
-        <div class="" style=" position:relative;border: 1px solid #969696;min-height:400px; min-width:250px; max-width:100px; overflow-y: auto; background:; float:left;display:inline-block;">
-        <?php 
-        if(isset($_GET['picId'])){
-            Echo$mooshoo['Description'];
+        <div class="" style=" position:relative;border: 1px solid darkgreen;min-height:400px; min-width:300px; max-width:300px; overflow-y: auto; background:; float:left;display:inline-block;">
+      <div style='position:absolute; height:270px; width:298px; border: 1px solid darkgreen; white-space:nowrap;overflow-y:auto;'> 
+          <?php 
+        if(isset($_GET['picId'])|| isset($_POST['commentSubmit'])){
+            Echo"<b>Description</b></br>".$mooshoo['Description']."</br></br>";
+            
+            foreach($result3 as $row){
+                echo"<b>".$row['UserId']."</b> - <i>".$row['Date']."</i></br>".$row['Comment_Text']."</br></br>";
+            }
+            
         }
-        ?>
+        ?>    
+        </div>
             <div style="position:absolute;bottom:0px;">
-                <textarea name="comment" rows="4" cols="32" style="resize:none;"></textarea>
+                <textarea name="comment" rows="4" cols="39" style="resize:none;"></textarea>
+                <input type='submit' name='commentSubmit'>
             </div>
         </div>
     </div>
-    <div style="max-width:850px; min-width:850px; max-height:135px; min-height:125px;border: 1px solid #969696;  white-space:nowrap;overflow-x:auto;background:;">
+    <div style="max-width:1000px; min-width:1000px; max-height:135px; min-height:135px;border: 1px solid darkgreen;  white-space:nowrap;overflow-x:auto;background:;">
      <?php 
-    if(isset($_POST["Change"]) || isset($_GET["picId"])){
+    if(isset($_POST["Change"]) || isset($_GET["picId"])|| isset($_POST['commentSubmit'])){
     foreach ($result as $row){
     echo"<a href='MyPictures.php?picId=".$row['Picture_Id']."'><img src='./thumbnails/".$row['FileName']."' width='150' height='115' style='border:1px solid #969696'></a>";
                         
