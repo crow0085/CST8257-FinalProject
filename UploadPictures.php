@@ -77,6 +77,14 @@ if (isset($_POST['btnUpload']))
     <h3>Upload Files</h3>
    <form action="UploadPictures.php" method="post"  enctype="multipart/form-data">
        <div class="row">
+           <p>
+               Allowed File types are JPEG PNG and GIF.
+               </br>
+               You can upload multiple files at once by pressing the shift key when selecting pictures.</br>
+               When uploading pictures the description and text field apply to all pictures</br>
+           </p>
+       </div>
+       <div class="row">
         File to Upload:&nbsp; <input type="file" name="txtUpload[]" multiple size='40'/>
        </div>
         <br/><br/>
