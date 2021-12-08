@@ -20,8 +20,8 @@ and open the template in the editor.
     $SID = $_SESSION["UserID"];
 
 
-    if (isset($_POST["delete"])) {
-        DeleteAlbum($_POST["albumToDelete"][0], GetPdo());
+    if ($_GET["delete"] != "") {
+        DeleteAlbum($_GET["delete"], GetPdo());
     }
 
     if (isset($_POST["Submit"])) {
@@ -72,8 +72,7 @@ and open the template in the editor.
                             }
                             echo "</select>";
                             echo"</td>";
-                            echo " <input type='hidden' name='albumToDelete[]' value='$album->albumID'> ";
-                            echo "<td> <input class='btn btn-link' type='submit' name='delete' value='delete' /> </td>";
+                            echo "<td> <a href='MyAlbums.php?delete=$album->albumID'>Delete</a> </td>";
                             echo "</tr>";
                         }
                         ?>
