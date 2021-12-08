@@ -50,27 +50,44 @@ and open the template in the editor.
                 . "WHERE Friend_RequesterId = :userId AND Status = 'accepted'";
                     $pStmt = GetPdo()->prepare($sql);
                     $pStmt->execute(['userId'=>$SID]);
-                    $row = $pStmt->fetch(PDO::FETCH_ASSOC);
+                    $row = $pStmt->fetchAll();
                     
                    				
                     $sql1 = "SELECT Friend_RequesterId FROM Friendship "
                 . "WHERE Friend_RequesteeId = :userId AND Status = 'accepted'";
                     $pStmt1 = GetPdo()->prepare($sql1);
                     $pStmt1->execute(['userId'=>$SID]);
-                    $row1 = $pStmt1->fetch(PDO::FETCH_ASSOC);
-                    
-                    $result = array_merge($row, $row1);
-                    foreach($result as $item){
+                    $row1 = $pStmt1->fetchAll();
+                    if(!empty($row) && !empty($row1)){
+                        $result = array_merge($row, $row1);
+                        
+                    }
+                    elseif(!empty($row)){
+                        $result = $row;
+                    }
+                    elseif(!empty($row1)){
+                        $result = $row1;
+                        
+                    }
+                    else{
+                        echo "You have no friends";
+                        
+                    }
+                    if(!empty($result)){
+                        foreach($result as $item){
                         $sql2 = "SELECT UserId, Name, COUNT(Album_Id) FROM User INNER JOIN Album ON User.UserId = Album.Owner_Id WHERE UserId = :item AND Accessibility_Code = 'shared'";
                         $pStmt2 = GetPdo()->prepare($sql2);
                         $pStmt2->execute(['item'=>$item]); 
-                        $row2 = $pStmt2->fetch(PDO::FETCH_ASSOC);
-                        foreach($row2 as $friendrows){ 
-                            echo "<tr><td>".$row2['Name']."</td><td>".$row2['COUNT(Album_Id)']."</td><td><input type='checkbox' name = 'checkedFriends[]' value=".$row2['UserId']."></input></td></tr>";                                                       
+                        $friendRows = $pStmt2->fetch(PDO::FETCH_ASSOC);
+                        foreach($friendRows as $row2){ 
+                            echo "<tr><td>".$friendRows['Name']."</td><td>".$friendRows['COUNT(Album_Id)']."</td><td><input type='checkbox' name = 'checkedFriends[]' value=".$friendRows['UserId']."></input></td></tr>";                                                       
                            
                         }
                         
                     }
+                        
+                    }
+                    
                     
                     
 //                    
