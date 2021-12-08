@@ -16,7 +16,7 @@ and open the template in the editor.
     ?>
     <body>
         <div class="container">
-            <h3 class="text-center">Welcome to Online Registration</h3>
+            <h3 class="text-center">Welcome to Algonquin Social Media Website</h3>
             <p>If you have never used this before, you have to <a href="NewUser.php" >Sign Up</a> first</p>
             <p>If you have used this before, you can <a href="Login.php" >log in</a> now</p>
         </div>

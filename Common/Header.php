@@ -7,6 +7,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.6/dist/css/bootstrap.min.css">
 </head>
 <body style="padding-top: 50px; margin-bottom: 60px;">
+    <?php include("./common/functions.php"); ?>
+    <?php include("./common/classes.php"); ?>
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -25,8 +27,10 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active"> <a href="Index.php">Home</a></li>
-            <li><a href="CourseSelection.php">Course Selection</a></li>
-            <li><a href="CurrentRegistrations.php">Current Registration</a></li>
+            <li><a href="Index.php">My Friends</a></li>
+            <li><a href="MyAlbums.php">My Albums</a></li>
+            <li><a href="Index.php">My Pictures</a></li>
+            <li><a href="Index.php">Upload Pictures</a></li>
             <?php if (!isset($_SESSION["logged_in"])){
                 echo"<li><a href='Login.php'>Login</a></li> </ul>";
             }else{

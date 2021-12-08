@@ -12,59 +12,21 @@ and open the template in the editor.
     </head>
     <?php
     session_start();
-
-    function ValidateName($fname) {
-        if ($fname == "") {
-            return "name cannot be blank";
-        } else {
-            return "";
-        }
-    }
-
-    function ValidatePhone($phone) {
-        if (!preg_match("/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/", $phone)) {
-            return "phone number cannot be blank and must be in the format ###-###-####";
-        } else {
-            return "";
-        }
-    }
-
-    function ValidateStudentID($SID, $myPDO) {
-
-        $sql = "SELECT StudentID FROM Student WHERE StudentID = '$SID'";
-        $resultSet = $myPDO->query($sql);
-        $row = $resultSet->fetch(PDO::FETCH_ASSOC);
-
-        if ($SID == "") {
-            return "student id cannot be blank";
-        } else if ($row) {
-            return "student id already exists";
-        } else {
-            return "";
-        }
-    }
-
-    function ValidatePassword($pass, $password_confirm) {
-        $upper = '/[A-Z]/';
-        $lower = '/[a-z]/';
-        $num = '/[0-9]/';
-        if ($pass != $password_confirm) {
-            return "passwords must match!";
-        }
-        if (preg_match($upper, $pass) && preg_match($lower, $pass) && preg_match($num, $pass) && strlen($pass) >= 6) {
-            return "";
-        } else {
-            return "Password must contain one uppercase, one lowercase and one number and at least 6 characters";
-        }
-    }
+    include("./common/header.php");
 
     $SID_error_message = "";
     $fname_error_message = "";
     $phone_error_message = "";
     $password_error_message = "";
 
+    $SID = "";
+    $fname = "";
+    $phone = "";
+    $pass = "";
+    $password_confirm = "";
+
     if (isset($_POST["Clear"])) {
-        
+
         $SID = "";
         $fname = "";
         $phone = "";
@@ -73,7 +35,6 @@ and open the template in the editor.
     }
 
     if (isset($_POST["Submit"])) {
-        $myPDO;
 
         $SID = $_POST["SID"];
         $fname = $_POST["fname"];
@@ -83,13 +44,7 @@ and open the template in the editor.
         $valid = false;
 
         try {
-            $dbConnection = parse_ini_file("Lab5.ini");
-
-            extract($dbConnection);
-
-            $myPDO = new PDO($dsn, $user, $password);
-
-            $SID_error_message = ValidateStudentID($SID, $myPDO);
+            $SID_error_message = ValidateStudentID($SID, GetPdo());
             $fname_error_message = ValidateName($fname);
             $phone_error_message = ValidatePhone($phone);
             $password_error_message = ValidatePassword($pass, $password_confirm);
@@ -102,22 +57,18 @@ and open the template in the editor.
             }
 
             if ($valid) {
-                $hash_pass = hash("sha256",$pass);
-                $sql = 'INSERT INTO Student VALUES (:SID, :fname, :phone,:hash_pass);';
-                $pSql = $myPDO->prepare($sql);
-                $pSql->execute(['SID'=>$SID, 'fname'=>$fname, 'phone'=>$phone, 'hash_pass'=>$hash_pass]);
+                $hash_pass = hash("sha256", $pass);
+                $sql = 'INSERT INTO User VALUES (:SID, :fname, :phone,:hash_pass);';
+                $pSql = GetPdo()->prepare($sql);
+                $pSql->execute(['SID' => $SID, 'fname' => $fname, 'phone' => $phone, 'hash_pass' => $hash_pass]);
                 $_SESSION["logged_in"] = true;
-                $_SESSION["StudentID"] = $SID;
-                header("Location: CourseSelection.php");
+                $_SESSION["UserID"] = $SID;
+                header("Location: Index.php");
             }
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
-
-        $myPdo = null;
     }
-
-    include("./common/header.php");
     ?>
     <body>
         <div class="container">
@@ -127,7 +78,7 @@ and open the template in the editor.
             <form action="NewUser.php" method="POST">
                 <div class="row form-group">
                     <div class="col-md-2">
-                        <label class="font-weight-bold">Student ID:</label>
+                        <label class="font-weight-bold">User ID:</label>
                     </div>
                     <div class="col-md-2">
                         <input class="form-control" name="SID" type="text" value="<?php echo "$SID"; ?>" />
