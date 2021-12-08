@@ -11,6 +11,9 @@ and open the template in the editor.
     </head>
     <?php
         session_start();
+        if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true) {
+        header("Location: Login.php");
+    }
         include("./common/header.php");
         $SID = $_SESSION["UserID"];
         $name = GetUserName($SID, GetPdo());
@@ -30,7 +33,7 @@ and open the template in the editor.
                 <thead>
                     <tr><td></td><td></td><td><a href="AddFriend.php">Add Friends</a></td></tr>
                     <tr>
-                        <th>Name</th><th>UserName</th><th>Shared Albums</th><th>Unfriend</th>
+                        <th>Name</th><th>Shared Albums</th><th>Unfriend</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,14 +93,14 @@ and open the template in the editor.
                     
                     if(!empty($result)){
                         foreach($result as $item){
-                        $sql2 = "select UserId, Name, (SELECT count(Owner_Id) FROM album 
+                        $sql2 = "select UserId, Name, (SELECT count(Owner_Id) FROM album
                                 WHERE Owner_Id = :item AND Accessibility_Code = 'shared') as Co from user Where UserId = :item";
                         $pStmt2 = GetPdo()->prepare($sql2);
                         $pStmt2->execute(['item'=>$item]); 
                             while($row2 = $pStmt2->fetch(PDO::FETCH_ASSOC)){
-                            echo "<tr><td><a href='FriendsAlbum.php?fId=".$row2['Name']."'>".$row2['UserId']."</a></td><td>".$row2['Co']."</td><td><input type='checkbox' name = 'checkedFriends[]' value=".$row2['UserId']."></input></td></tr>";
+                                echo "<tr><td><a href='FriendsAlbum.php?fId=".$row2['UserId']."'>".$row2['Name']."</a></td><td>".$row2['Co']."</td><td><input type='checkbox' name = 'checkedFriends[]' value=".$row2['UserId']."></input></td></tr>";
+                            //echo "<tr><td>".$row2['Name']."</td><td>".$row2['Co']."</td><td><input type='checkbox' name = 'checkedFriends[]' value=".$row2['UserId']."></input></td></tr>";
                             }
-                            
                         }
 
 

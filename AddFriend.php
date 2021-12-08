@@ -11,6 +11,9 @@ and open the template in the editor.
     </head>
     <?php
         session_start();
+        if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true) {
+        header("Location: Login.php");
+    }
         include("./common/header.php");
         $SID = $_SESSION["UserID"];
         $name = GetUserName($SID, GetPdo());
@@ -55,20 +58,23 @@ and open the template in the editor.
                         $sql1 = "UPDATE Friendship SET Status = 'accepted' WHERE Friend_RequesterId = :requester AND Friend_RequesteeId = :requestee";
                         $pStmt1 = GetPdo()->prepare($sql1);
                         $pStmt1->execute(['requester'=>$requesteeId, 'requestee'=>$SID]);                        
-                        echo $requesteeId." has already sent you a friend request. You have just become friends. ";
+                        echo "<p class='text-danger'>".$requesteeId." has already sent you a friend request. You have just become friends. </p>";
                         
                     }
                     elseif($row2){
-                        echo "You and ".$row2['Friend_RequesterId']. " are already friends";
+                        echo "<p class='text-danger'>You and ".$row2['Friend_RequesterId']. " are already friends </p>";
                         
                     }
                     elseif($row4){
                         $sql3 = "INSERT INTO Friendship VALUES (:requester, :requestee, 'request')";
                         $pStmt3 = GetPdo()->prepare($sql3);
                         $pStmt3->execute(['requester'=>$SID, 'requestee'=>$requesteeId]);
-                        echo "Your request was sent to ".$requesteeId." Once ".$row4['Name']." accepts, you will see each other's albums";    
+                        echo "<p class='text-danger'>Your request was sent to ".$requesteeId." Once ".$row4['Name']." accepts, you will see each other's albums</p>";    
                     
                         
+                    }
+                    if($requesteeId == $SID){
+                        echo "<p class='text-danger'>You cant friend yourself</p>";
                     }
                     
                 }
@@ -77,7 +83,6 @@ and open the template in the editor.
                 else{
                     echo "This user doesn't exist";
                 }
-                                        //var_dump($row4);
 
                 
             }
