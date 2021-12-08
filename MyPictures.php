@@ -165,3 +165,7 @@ if (isset($_POST["Change"]) || isset($_GET["picId"]) || isset($_POST['commentSub
 </script>
 
 
+
+
+<?php 
+include("./common/footer.php");?>

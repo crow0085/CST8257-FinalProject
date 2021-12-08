@@ -207,3 +207,8 @@ and open the template in the editor.
 
     </body>
 </html>
+
+
+
+<?php 
+include("./common/footer.php");?>

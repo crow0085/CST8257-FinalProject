@@ -91,3 +91,8 @@ and open the template in the editor.
         </div>
     </body>
 </html>
+
+
+
+<?php 
+include("./common/footer.php");?>
