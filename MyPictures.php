@@ -74,7 +74,7 @@ foreach ($albums as $row) {
             </select>
             <div class="text-left">
                 <?php
-                if (isset($_GET['picId']) || isset($_POST['commentSubmit'])) {
+                if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSubmit']) && !isset($_POST['Change'])) {
                     if(isset($dropValue)){
             if($dropValue != -1){
                     Echo"<h3 class='align-left'>" . $mooshoo['Title'] . "</h3>";}}
@@ -106,9 +106,9 @@ if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSu
                     <?php
                     if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSubmit']) && !isset($_POST['Change'])) {
                         Echo"<b>Description</b></br>" . $mooshoo['Description'] . "</br></br>";
-
+                        Echo"<b>Comments</b>";
                         foreach ($result3 as $row) {
-                            echo"<p><b style='color:blue;'>" . $row['Name'] . "</b> - <i>" . $row['Date'] . "</i> -" . $row['Comment_Text'] . "</p></br>";
+                            echo"<p><b style='color:blue;'>" . $row['Name'] . " (<i>" . $row['Date'] . ")</b></i> -" . $row['Comment_Text'] . "</p>";
                         }
                     }
                     ?>    
@@ -131,7 +131,7 @@ if (isset($_POST["Change"]) || isset($_GET["picId"]) || isset($_POST['commentSub
         if ($dropValue != -1) {
             foreach ($result as $row) {
                 echo"<li class='";
-                if(isset($_GET["picId"])){ if($_GET['picId']== $row['Picture_Id']){
+                if(isset($_GET["picId"]) && !isset($_POST['Change'])){ if($_GET['picId']== $row['Picture_Id']){
                     echo "target";
                 }}
                 echo"'>'<a href='MyPictures.php?picId=" . $row['Picture_Id'] . "'href='#".$row['Picture_Id']."'><img src='./thumbnails/" . $row['FileName'] . "' width='150' height='100' style='border:1px solid #969696'></a></li>";
