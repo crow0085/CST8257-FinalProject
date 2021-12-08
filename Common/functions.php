@@ -119,11 +119,26 @@ function ChangeAccessibility($accessibilityChangeList, $myPDO) {
 
         $sql = "update Album set Accessibility_Code = :accessibility_code where Album_Id = :album_id";
         $pStmt = $myPDO->prepare($sql);
-        $pStmt->execute(['album_id' => $albumID, 'accessibility_code'=>$accessibilityCode]);
+        $pStmt->execute(['album_id' => $albumID, 'accessibility_code' => $accessibilityCode]);
     }
 }
 
 function DeleteAlbum($album, $myPDO) {
+
+
+    // delete the comments for each picture
+    $sql = "select * from Picture where Album_Id = :album_id";
+    $pStmt = $myPDO->prepare($sql);
+    $pStmt->execute(['album_id' => $album]);
+
+    foreach ($pStmt as $row) {
+        $pictureID = $row['Picture_Id'];
+        $sql = "delete from comment where Picture_Id = :picture_id";
+        $pStmt = $myPDO->prepare($sql);
+        $pStmt->execute(['picture_id' => $pictureID]);
+    }
+
+
     //delete the pictures from the album
     $sql = "delete from Picture where Album_Id = :album_id";
     $pStmt = $myPDO->prepare($sql);
