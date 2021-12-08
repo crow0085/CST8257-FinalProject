@@ -21,8 +21,8 @@ and open the template in the editor.
 
     $SID = $_SESSION["UserID"];
 
-    
-    if ($_GET["delete"] != "") {
+
+    if (isset($_GET["delete"])) {
         DeleteAlbum($_GET["delete"], GetPdo());
     }
 
