@@ -28,8 +28,9 @@ and open the template in the editor.
         <form method="post" action="MyFriends.php">
             <table class="table">
                 <thead>
+                    <tr><td></td><td></td><td><a href="AddFriend.php">Add Friends</a></td></tr>
                     <tr>
-                        <th>Name</th><th>Shared Albums</th><th>Unfriend</th>
+                        <th>Name</th><th>UserName</th><th>Shared Albums</th><th>Unfriend</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,7 +47,8 @@ and open the template in the editor.
                             
                         }
                     }
-                    $sql = "SELECT Friend_RequesteeId FROM Friendship "
+                    
+                     $sql = "SELECT Friend_RequesteeId FROM Friendship "
                 . "WHERE Friend_RequesterId = :userId AND Status = 'accepted'";
                     $pStmt = GetPdo()->prepare($sql);
                     $pStmt->execute(['userId'=>$SID]);
@@ -58,52 +60,70 @@ and open the template in the editor.
                     $pStmt1 = GetPdo()->prepare($sql1);
                     $pStmt1->execute(['userId'=>$SID]);
                     $row1 = $pStmt1->fetchAll();
+                    
+                    $result= array();
                     if(!empty($row) && !empty($row1)){
-                        $result = array_merge($row, $row1);
-                        
+                        foreach($row as $item){
+                            array_push($result,$item['Friend_RequesteeId']);
+                        }
+                        foreach($row1 as $item){
+                            array_push($result,$item['Friend_RequesterId']);
+                        }
+
+
                     }
                     elseif(!empty($row)){
-                        $result = $row;
+                        foreach($row as $item){
+                            array_push($result,$item['Friend_RequesteeId']);
+                        }
                     }
                     elseif(!empty($row1)){
-                        $result = $row1;
-                        
+                        foreach($row1 as $item){
+                            array_push($result,$item['Friend_RequesterId']);
+                        }
+
                     }
                     else{
                         echo "You have no friends";
-                        
+
                     }
+                    
                     if(!empty($result)){
                         foreach($result as $item){
-                        $sql2 = "SELECT UserId, Name, COUNT(Album_Id) FROM User INNER JOIN Album ON User.UserId = Album.Owner_Id WHERE UserId = :item AND Accessibility_Code = 'shared'";
+                        $sql2 = "select UserId, (SELECT count(Owner_Id) FROM album 
+                                WHERE Owner_Id = :item AND Accessibility_Code = 'shared') as Co from user Where UserId = :item";
                         $pStmt2 = GetPdo()->prepare($sql2);
                         $pStmt2->execute(['item'=>$item]); 
-                        $friendRows = $pStmt2->fetch(PDO::FETCH_ASSOC);
-                        foreach($friendRows as $row2){ 
-                            echo "<tr><td>".$friendRows['Name']."</td><td>".$friendRows['COUNT(Album_Id)']."</td><td><input type='checkbox' name = 'checkedFriends[]' value=".$friendRows['UserId']."></input></td></tr>";                                                       
-                           
+                            while($row2 = $pStmt2->fetch(PDO::FETCH_ASSOC)){
+                            echo "<tr><td>".$row2['Name']."</td><td>".$row2['UserId']."</td><td>".$row2['Co']."</td><td><input type='checkbox' name = 'checkedFriends[]' value=".$row2['UserId']."></input></td></tr>";
+                            }
                         }
-                        
+
+
+
                     }
-                        
-                    }
+
+                  
                     
                     
-                    
-//                    
-                    //$result = array('requester'=>$row,'requestee'=>$row1);
-                    //echo json_encode($result);
-//                    foreach($result as $item){
-//                        echo "<tr><td>".$item."</td></tr>";
+//                    if(!empty($result)){
+//                        foreach($result as $item){
+//                        $sql2 = "SELECT UserId, Name, COUNT(Album_Id) FROM User LEFT OUTER JOIN Album ON User.UserId = Album.Owner_Id WHERE UserId = :item";    
+                        //$sql2 = "SELECT UserId, Name, COUNT(Album_Id) FROM User INNER JOIN Album ON User.UserId = Album.Owner_Id WHERE "
+                         //       . "UserId = :item AND Accessibility_Code = 'shared'";
+//                        $pStmt2 = GetPdo()->prepare($sql2);
+//                        $pStmt2->execute(['item'=>$item]); 
+//                        while($row2 = $pStmt2->fetch(PDO::FETCH_ASSOC)){
+//                            echo "<tr><td>".$row2['Name']."</td><td>".$row2['COUNT(Album_Id)']."</td><td><input type='checkbox' name = 'checkedFriends[]' value=".$row2['UserId']."></input></td></tr>";                                                       
+//                           
+//                        }
+//                        
 //                    }
-				
-//                    $sql = "SELECT UserId, Name FROM User INNER JOIN Friendship on User.UserId = Friendship.Friend_RequesteeId OR "
-//                    . "User.UserId = Friendship.Friend_RequesterId WHERE Status = 'accepted'";
-//                    $pStmt = GetPdo()->query($sql);
-//                    while($row = $pStmt->fetch(PDO::FETCH_ASSOC)){ 
-//                        echo "<tr><td>".$row['Friend_RequesterId']."</td><td>".$row['term']."</td><td><input type='checkbox' name = 'checkedCourses[]' value=".$row['UserId']."></input></td></tr>";                                                       
-//
+//                        
 //                    }
+                    
+                    
+                    
 
                     ?>
                     <tr>
@@ -117,7 +137,7 @@ and open the template in the editor.
 
                 <div class="row form-group">
                     <div class="col-sm-2">
-                        <input class="btn btn-primary" type="submit" name="unfriend" value="Unfriend Selected" />
+                        <input class="btn btn-primary" type="submit" name="unfriend" onclick="return confirm('The selected friends will be unfriended!');" value="Unfriend Selected" />
                     </div>
                 </div>
             
@@ -129,6 +149,27 @@ and open the template in the editor.
                 </thead>
                 <tbody>
                     <?php 
+                    if(isset($_POST['Deny'])){
+                        if(!empty($_POST['checkedRequests'])){
+                            foreach($_POST['checkedRequests'] as $selectedIds){
+                                $sqlRegD = GetPdo()->prepare("DELETE FROM Friendship WHERE Friend_RequesterId = :Id AND Friend_RequesteeId = :SID AND Status = 'request'");
+                                $result1 = $sqlRegD->execute(['Id'=>$selectedIds,'SID'=>$SID]);
+                            }
+                            
+                            
+                        }
+                    }
+                    if(isset($_POST['Accept'])){
+                        if(!empty($_POST['checkedRequests'])){
+                            foreach($_POST['checkedRequests'] as $selectedIds){
+                                $sqlRegD = GetPdo()->prepare("UPDATE Friendship SET Status = 'accepted' WHERE Friend_RequesterId = :Id AND Friend_RequesteeId = :SID");
+                                $result1 = $sqlRegD->execute(['Id'=>$selectedIds,'SID'=>$SID]);
+                            }
+                            
+                            
+                        }
+                    }
+                    
                     $sql5= "SELECT Name, Friend_RequesterId FROM Friendship INNER JOIN User ON Friendship.Friend_RequesterId = User.UserId WHERE Friend_RequesteeId = :userId AND Status = 'request'";                
                     $pStmt5 = GetPdo()->prepare($sql5);
                     $pStmt5->execute(['userId'=>$SID]);
@@ -148,7 +189,7 @@ and open the template in the editor.
                         <input class="btn btn-primary" type="submit" name="Accept" value="Accept Selected" />
                     </div>
                     <div class="col-md-2">
-                        <input class="btn btn-primary" type="submit" name="Deny" value="Deny Selected" />
+                        <input class="btn btn-primary" type="submit" name="Deny" onclick="return confirm('The selected requests will be denied!');" value="Deny Selected" />
 
                     </div>
                 </div>
