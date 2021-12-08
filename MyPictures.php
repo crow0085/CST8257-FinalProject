@@ -41,7 +41,7 @@ if (isset($_GET['picId']) || isset($_POST['commentSubmit'])) {
     }
     $mooshoo = $pSql->fetch(PDO::FETCH_ASSOC);
     $sql2 = "SELECT * FROM Comment "
-            . "INNER JOIN User ON Comment.Author_Id = User.UserId WHERE Picture_Id = :pictureId order by Date";
+            . "INNER JOIN User ON Comment.Author_Id = User.UserId WHERE Picture_Id = :pictureId order by Date DESC";
     $pSql3 = $MyPDO->prepare($sql2);
     $pSql3->execute(['pictureId' => $picId]);
     $result3 = $pSql3->fetchAll();
@@ -77,7 +77,7 @@ foreach ($albums as $row) {
                 if (isset($_GET['picId']) || isset($_POST['commentSubmit'])) {
                     if(isset($dropValue)){
             if($dropValue != -1){
-                    Echo"<h3>" . $mooshoo['Title'] . "</h3>";}}
+                    Echo"<h3 class='align-left'>" . $mooshoo['Title'] . "</h3>";}}
                 } else if (!isset($_POST['Change'])) {
                     
                 }
@@ -102,13 +102,13 @@ if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSu
 ?>
             </div>
             <div class="" style=" position:relative;min-height:400px; min-width:300px; max-width:300px; overflow-y: auto; background:; float:left;display:inline-block;">
-                <div style='position:absolute; height:270px; width:298px;  white-space:nowrap;overflow-y:auto;'> 
+                <div style='position:absolute; height:270px; width:298px;  overflow-wrap: break-word;overflow-y:auto;'> 
                     <?php
                     if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSubmit']) && !isset($_POST['Change'])) {
                         Echo"<b>Description</b></br>" . $mooshoo['Description'] . "</br></br>";
 
                         foreach ($result3 as $row) {
-                            echo"<b>" . $row['UserId'] . "</b> - <i>" . $row['Date'] . "</i></br>" . $row['Comment_Text'] . "</br></br>";
+                            echo"<p><b style='color:blue;'>" . $row['UserId'] . "</b> - <i>" . $row['Date'] . "</i> -" . $row['Comment_Text'] . "</p></br>";
                         }
                     }
                     ?>    
@@ -117,7 +117,7 @@ if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSu
                     if (isset($_GET['picId']) && !isset($_POST['Change'])) {
                         echo"<div style='position:absolute;bottom:0px;'>"
                         . "<textarea name='comment' rows='4' cols='39' style='resize:none;'></textarea>"
-                        . "<input type='submit' name='commentSubmit'>"
+                        . "<input type='submit' class='btn btn-primary' value='AddComment' name='commentSubmit'>"
                         . "</div>";
                     }
                     ?>
@@ -130,7 +130,11 @@ if (isset($_POST["Change"]) || isset($_GET["picId"]) || isset($_POST['commentSub
     if (isset($dropValue)) {
         if ($dropValue != -1) {
             foreach ($result as $row) {
-                echo"<li id='clicka'><a href='MyPictures.php?picId=" . $row['Picture_Id'] . "'><img src='./thumbnails/" . $row['FileName'] . "' width='150' height='100' style='border:1px solid #969696'></a></li>";
+                echo"<li class='";
+                if(isset($_GET["picId"])){ if($_GET['picId']== $row['Picture_Id']){
+                    echo "target";
+                }}
+                echo"'>'<a href='MyPictures.php?picId=" . $row['Picture_Id'] . "'href='#".$row['Picture_Id']."'><img src='./thumbnails/" . $row['FileName'] . "' width='150' height='100' style='border:1px solid #969696'></a></li>";
             }
         }
     }

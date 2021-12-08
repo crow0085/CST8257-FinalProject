@@ -18,6 +18,7 @@ define("IMAGE_MAX_HEIGHT", 600);
 define("THUMB_DESTINATION", "./thumbnails");  
 define("THUMB_MAX_WIDTH", 100);
 define("THUMB_MAX_HEIGHT", 100);
+$warning ="";
 if (isset($_POST['btnUpload'])) 
 {
     $destination = './Pictures';       	// define the path to a folder to save the file
@@ -55,19 +56,19 @@ if (isset($_POST['btnUpload']))
                         }
 		elseif ($_FILES['txtUpload']['error'][$j]  == 1)
 		{			
-			echo "$fileName is too large <br/>";
+			$warning =$fileName." is too large <br/>";
 		}
 		elseif ($_FILES['txtUpload']['error'][$j]  == 4)
 		{
-			echo "No upload file specified <br/>"; 
+			$warning ="No upload file specified <br/>"; 
 		}
 		else
 		{
-			echo "Error happened while uploading the file(s). Try again late<br/>"; 
+			$warning ="Error happened while uploading the file(s). Try again late<br/>"; 
 		}
 	}   
         
-	echo "<h2>All Uploaded Files</h2>";
+	
 	$files = scandir($destination);
 	
                  
@@ -88,6 +89,11 @@ if (isset($_POST['btnUpload']))
         File to Upload:&nbsp; <input type="file" name="txtUpload[]" multiple size='40'/>
        </div>
         <br/><br/>
+        <?php 
+        if($warning != ""){
+            echo"<div class='text-danger'>".$warning."</div>";
+        }
+        ?>
         
         <div class="row">
          <select id="dropDown" name="dropValue" class="col-lg-2 text-right">
@@ -117,8 +123,8 @@ if (isset($_POST['btnUpload']))
         <textarea name="description"  rows="4"  cols="50" ></textarea>
         </div>
         <div class="row">
-		<input type="submit" name="btnUpload" value="Upload" />
-		&nbsp; &nbsp; &nbsp;<input type="reset" name="btnReset" value="Reset" />
+		<input type="submit" name="btnUpload" class="btn btn-primary" value="Upload" />
+		&nbsp; &nbsp; &nbsp;<input type="reset" name="btnReset" class="btn btn-primary" value="Reset" />
         </div>
    </form> 
 </div>
