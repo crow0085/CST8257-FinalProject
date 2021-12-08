@@ -22,6 +22,7 @@ and open the template in the editor.
             <p>Welcome <?php echo $name; ?> (not you? change user <a href="Login.php">here</a>)</p>
             <p>Enter the ID of the user you want to friend</p>
             <?php
+            
             $requesteeId = $_POST["requesteeId"];
             if(isset($requesteeId)){
                 $requesteeId = trim($requesteeId);                
