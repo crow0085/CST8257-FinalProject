@@ -27,10 +27,10 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active"> <a href="Index.php">Home</a></li>
-            <li><a href="Index.php">My Friends</a></li>
+            <li><a href="MyFriends.php">My Friends</a></li>
             <li><a href="MyAlbums.php">My Albums</a></li>
-            <li><a href="Index.php">My Pictures</a></li>
-            <li><a href="Index.php">Upload Pictures</a></li>
+            <li><a href="MyPictures.php">My Pictures</a></li>
+            <li><a href="UploadPictures.php">Upload Pictures</a></li>
             <?php if (!isset($_SESSION["logged_in"])){
                 echo"<li><a href='Login.php'>Login</a></li> </ul>";
             }else{
