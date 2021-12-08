@@ -57,10 +57,10 @@ if (isset($_GET['picId']) || isset($_POST['commentSubmit'])) {
 }
 ?>
 
-<form action="MyPictures.php" method="post">
+<form action="FriendsAlbum.php" method="post">
     <div class='container' style='padding-left:200px;'>
         <div class="row">
-            <h3> My Albums</h3>
+            <h3> <?php echo$fId; ?> Albums</h3>
         </div>
         <div class="row">
             <select id="dropDown" name="dropValue" class="col-lg-3 text-right" >
@@ -140,7 +140,7 @@ if (isset($_POST["Change"]) || isset($_GET["picId"]) || isset($_POST['commentSub
                 if(isset($_GET["picId"])){ if($_GET['picId']== $row['Picture_Id']){
                     echo "target";
                 }}
-                echo"'>'<a href='MyPictures.php?picId=" . $row['Picture_Id'] . "'href='#".$row['Picture_Id']."'><img src='./thumbnails/" . $row['FileName'] . "' width='150' height='100' style='border:1px solid #969696'></a></li>";
+                echo"'>'<a href='FriendsAlbum.php?picId=" . $row['Picture_Id'] . "'href='#".$row['Picture_Id']."'><img src='./thumbnails/" . $row['FileName'] . "' width='150' height='100' style='border:1px solid #969696'></a></li>";
             }
         }
     }

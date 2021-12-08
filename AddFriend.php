@@ -28,6 +28,10 @@ and open the template in the editor.
             
             $requesteeId = $_POST["requesteeId"];
             if(isset($requesteeId)){
+             if($requesteeId == $SID){
+                        echo "<p class='text-danger'>You cant friend yourself</p>";
+                    }else{
+            if(isset($requesteeId)){
                 $requesteeId = trim($requesteeId);                
             }
             //joe ac456 requester wants to friend chrisH requestee
@@ -73,12 +77,10 @@ and open the template in the editor.
                     
                         
                     }
-                    if($requesteeId == $SID){
-                        echo "<p class='text-danger'>You cant friend yourself</p>";
-                    }
+                   
                     
                 }
-                
+            }
                
                 else{
                     echo "This user doesn't exist";
@@ -87,7 +89,7 @@ and open the template in the editor.
                 
             }
             
-
+                    }
             ?>
             <form method="post" action="AddFriend.php">
                 <div class="row form-group">
