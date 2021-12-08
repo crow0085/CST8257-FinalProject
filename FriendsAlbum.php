@@ -80,13 +80,11 @@ foreach ($albums as $row) {
             </select>
             <div class="text-left">
                 <?php
-                if (isset($_GET['picId']) && !isset($_POST['Change'])|| isset($_POST['commentSubmit'])&& !isset($_POST['Change'])) {
+                if ((isset($_GET['picId']) && !isset($_POST['Change'])) || (isset($_POST['commentSubmit']) && !isset($_POST['Change']))) {
                     if(isset($dropValue)){
             if($dropValue != -1){
-                    Echo"<h3 class='align-left'>" . $mooshoo['Title'] . "</h3>";}}
-                } else if (!isset($_POST['Change'])) {
-                    
-                }
+                    Echo"<h3 class='align-center'>" . $mooshoo['Title'] . "</h3>";}}
+                } 
                 ?>
         </div>
         </div>
@@ -112,9 +110,9 @@ if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSu
                     <?php
                     if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSubmit']) && !isset($_POST['Change'])) {
                         Echo"<b>Description</b></br>" . $mooshoo['Description'] . "</br></br>";
-
+                        echo " <b>Comments</b></br>";
                         foreach ($result3 as $row) {
-                            echo"<p><b style='color:blue;'>" . $row['UserId'] . "</b> - <i>" . $row['Date'] . "</i> -" . $row['Comment_Text'] . "</p></br>";
+                            echo"<p><b style='color:blue;'>" . $row['Name'] . "</b> - <i>" . $row['Date'] . "</i> -" . $row['Comment_Text'] . "</p></br>";
                         }
                     }
                     ?>    

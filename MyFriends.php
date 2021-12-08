@@ -24,7 +24,7 @@ and open the template in the editor.
     <body>
         
         <div class="container">
-            <h3 class="text-center">My Friends</h3>
+            <h3 class="text-left">My Friends</h3>
             <p>Welcome <?php echo $name; ?> (not you? change user <a href="Login.php">here</a>)</p>
             <?php
           
@@ -34,7 +34,7 @@ and open the template in the editor.
         <form method="post" action="MyFriends.php">
             <table class="table">
                 <thead>
-                    <tr><td></td><td></td><td><a href="AddFriend.php">Add Friends</a></td></tr>
+                    <tr><td>Friends</td><td></td><td><a href="AddFriend.php">Add Friends</a></td></tr>
                     <tr>
                         <th>Name</th><th>Shared Albums</th><th>Unfriend</th>
                     </tr>
@@ -150,6 +150,7 @@ and open the template in the editor.
             
             <table class="table">
                 <thead>
+                    <tr>Friend Requests</tr>
                     <tr>
                         <th>Name</th><th></th><th class="col-md-4">Accept or Deny</th>
                     </tr>

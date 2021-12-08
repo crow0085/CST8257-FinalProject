@@ -108,7 +108,7 @@ if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSu
                         Echo"<b>Description</b></br>" . $mooshoo['Description'] . "</br></br>";
 
                         foreach ($result3 as $row) {
-                            echo"<p><b style='color:blue;'>" . $row['UserId'] . "</b> - <i>" . $row['Date'] . "</i> -" . $row['Comment_Text'] . "</p></br>";
+                            echo"<p><b style='color:blue;'>" . $row['Name'] . "</b> - <i>" . $row['Date'] . "</i> -" . $row['Comment_Text'] . "</p></br>";
                         }
                     }
                     ?>    
