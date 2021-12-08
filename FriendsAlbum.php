@@ -80,7 +80,7 @@ foreach ($albums as $row) {
             </select>
             <div class="text-left">
                 <?php
-                if (isset($_GET['picId']) || isset($_POST['commentSubmit'])) {
+                if (isset($_GET['picId']) && !isset($_POST['Change'])|| isset($_POST['commentSubmit'])&& !isset($_POST['Change'])) {
                     if(isset($dropValue)){
             if($dropValue != -1){
                     Echo"<h3 class='align-left'>" . $mooshoo['Title'] . "</h3>";}}

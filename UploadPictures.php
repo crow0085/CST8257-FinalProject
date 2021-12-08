@@ -21,8 +21,14 @@ define("THUMB_MAX_HEIGHT", 100);
 $warning ="";
 if (isset($_POST['btnUpload'])) 
 {
-    $destination = './Pictures';       	// define the path to a folder to save the file
-
+    $destination = './Pictures';   
+    // define the path to a folder to save the file
+    if($dropValue == -1 && isset($_SESSION['dValue'])){
+      $_SESSION['dValue']= $dropValue;
+      
+    }
+if($dropValue != -1){
+    $_SESSION['dValue']= $dropValue;
 	if (!file_exists($destination))
 	{
 		mkdir($destination);
@@ -52,7 +58,7 @@ if (isset($_POST['btnUpload']))
                         $sql = "INSERT INTO `picture` (`Picture_Id`, `Album_Id`, `FileName`, `Title`, `Description`, `Date_Added`) VALUES (NULL, :albumId, :fileName, :title, :description, :dateAdded)";
                          $pSql = $MyPDO->prepare($sql);
                         $pSql->execute(['albumId' => $dropValue, 'fileName' => $dbfileName, 'title' => $title, 'description' => $description, 'dateAdded' => date('Y-m-d')]);
-                        
+                        $warning ='Files Succesfully Uploaded';
                         }
 		elseif ($_FILES['txtUpload']['error'][$j]  == 1)
 		{			
@@ -71,7 +77,9 @@ if (isset($_POST['btnUpload']))
 	
 	$files = scandir($destination);
 	
-                 
+}else{
+    $warning = "You Must Select An Album!";
+}
 }
 ?>
 <div class="container" style="padding-top: 5px">
@@ -102,6 +110,11 @@ if (isset($_POST['btnUpload']))
                 foreach ($albums as $row) {
                     echo"<option value='" . $row->albumID . "'";
                     
+                    if(isset($_SESSION['dValue'])){
+                        if($_SESSION['dValue']== $row->albumID){
+                            echo"selected";
+                        }
+                    }
                      
                     echo">" .$row->title. "</option>";
                 }
