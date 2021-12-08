@@ -11,9 +11,12 @@ and open the template in the editor.
     </head>
     <?php
         session_start();
+        
         if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true) {
         header("Location: Login.php");
     }
+    unset($_SESSION['picId']);
+    unset($_SESSION['dropValue']);
         include("./common/header.php");
         $SID = $_SESSION["UserID"];
         $name = GetUserName($SID, GetPdo());

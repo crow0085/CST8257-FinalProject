@@ -13,7 +13,8 @@ and open the template in the editor.
     <?php
     session_start();
     include("./common/header.php");
-
+unset($_SESSION['picId']);
+    unset($_SESSION['dropValue']);
 
     $valid = false;
     $errMessage = "";
