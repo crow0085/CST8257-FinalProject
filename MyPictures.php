@@ -5,6 +5,11 @@ extract($_POST);
 if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true) {
     header("Location: Login.php");
 }
+if(isset($_SESSION['fA'])){
+    unset($_SESSION['picId']);
+    unset($_SESSION['dropValue']);
+    unset($_SESSION['fA']);
+}
 include("./common/header.php");
 $MyPDO = GetPdo();
 $SID = $_SESSION["UserID"];
@@ -108,7 +113,7 @@ if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSu
                         Echo"<b>Description</b></br>" . $mooshoo['Description'] . "</br></br>";
                         Echo"<b>Comments</b>";
                         foreach ($result3 as $row) {
-                            echo"<p><b style='color:blue;'>" . $row['Name'] . " (<i>" . $row['Date'] . ")</b></i> -" . $row['Comment_Text'] . "</p>";
+                            echo"<p><b style='color:blue;'>" . $row['Name'] . "(<i>" . $row['Date'] . ")</b></i> -" . $row['Comment_Text'] . "</p>";
                         }
                     }
                     ?>    

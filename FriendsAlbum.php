@@ -2,6 +2,8 @@
 session_start();
 
 extract($_POST);
+$_SESSION['fA']= "boo";
+
 if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true) {
     header("Location: Login.php");
 }
@@ -112,7 +114,7 @@ if (isset($_GET['picId']) && !isset($_POST['Change']) || isset($_POST['commentSu
                         Echo"<b>Description</b></br>" . $mooshoo['Description'] . "</br></br>";
                         echo " <b>Comments</b></br>";
                         foreach ($result3 as $row) {
-                            echo"<p><b style='color:blue;'>" . $row['Name'] . "(<i>" . $row['Date'] . ")</b></i> -" . $row['Comment_Text'] . "</p></br>";
+                            echo"<p><bstyle='color:blue;'>" . $row['Name'] . "(<i>" . $row['Date'] . ")</b></i>-" . $row['Comment_Text'] . "</p>";
                         }
                     }
                     ?>    
